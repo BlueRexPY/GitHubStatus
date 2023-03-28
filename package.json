@@ -12,12 +12,10 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "github-status.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+    "statusBar": {
+      "id": "github-status.statusBar",
+      "alignment": "right"
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
