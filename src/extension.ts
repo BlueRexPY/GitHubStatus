@@ -1,18 +1,15 @@
 import * as vscode from "vscode";
 
-export const activate = (context: vscode.ExtensionContext) => {
-  const myStatusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
+// simple status bar item
+
+export const activate = () => {
+  const statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
     100
   );
-  myStatusBarItem.text = "Hello World";
-  myStatusBarItem.show();
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("myExtension.updateStatus", () => {
-      myStatusBarItem.text = "Updated Text";
-    })
-  );
+  statusBarItem.text = "Hello World";
+  statusBarItem.show();
 };
+activate();
 
 export const deactivate = () => {};
