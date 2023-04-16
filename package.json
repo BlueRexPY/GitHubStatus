@@ -9,25 +9,65 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
-  "main": "./dist/extension.js",
+  "publisher": "RuslanRystsov",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BlueRexPY/GitHubStatus.git"
+  },
+  "icon": "images/icon.svg",
+  "license": "MIT",
+  "keywords": [
+    "github",
+    "status",
+    "availability",
+    "performance",
+    "crash"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
   "contributes": {
-    "statusBar": {
-      "id": "github-status.statusBar",
-      "alignment": "right"
+    "commands": [
+      {
+        "command": "gitHubStatus.update",
+        "title": "GitHub Status: Hard refresh 🔄"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "github-status",
+          "name": "GitHub Status"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "github-status",
+          "title": "GitHub Status",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "GitHub Status",
+      "properties": {
+        "githubStatus.refreshInterval": {
+          "type": "number",
+          "default": 5,
+          "description": "Refresh interval in minutes"
+        }
+      }
     }
   },
   "scripts": {
-    "start": "node ./build/extension.js",
     "vscode:prepublish": "pnpm run package",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir build",
-    "watch-tests": "tsc -p . -w --outDir build",
-    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./build/test/runTest.js"
+    "lint": "eslint src --ext ts"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
