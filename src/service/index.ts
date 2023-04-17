@@ -9,23 +9,24 @@ export const getComponents = (data: IData) =>
 
 export const getColor = (components: ComponentsType) => {
   const statusesList = Object.keys(components);
+  let color = 'none';
 
   if (statusesList.includes(StatusEnum.maintenance)) {
-    return statusColors.maintenance;
+    color = statusColors.maintenance;
   }
   if (statusesList.includes(StatusEnum.degradedPerformance)) {
-    return statusColors.degradedPerformance;
+    color = statusColors.degradedPerformance;
   }
 
   if (statusesList.includes(StatusEnum.partialOutage)) {
-    return statusColors.partialOutage;
+    color = statusColors.partialOutage;
   }
 
   if (statusesList.includes(StatusEnum.majorOutage)) {
-    return statusColors.majorOutage;
+    color = statusColors.majorOutage;
   }
 
-  return 'none';
+  return color;
 };
 
 export const getTooltipText = (components: ComponentsType) => {

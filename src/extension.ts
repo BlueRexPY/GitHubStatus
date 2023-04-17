@@ -1,20 +1,22 @@
 import * as vscode from 'vscode';
-import { getStatus } from './api';
+import { statusReq } from './api';
 import { updateCommand } from './commands/update';
 import ui from './ui';
 import { getColor, getComponents, getTooltipText } from './service';
 
 export const activate = (context: vscode.ExtensionContext) => {
   let update = vscode.commands.registerCommand(updateCommand, () => {
-    vscode.window.showInformationMessage('GitHub Status - Updated!');
     updateStatus();
   });
 
-  const updateStatus = async () => {
-    const data = await getStatus();
-    const components = getComponents(data);
+  const updateStatus = async (init: boolean = false) => {
+    const data = await statusReq;
+    const components = getComponents(data.data);
     ui.color = getColor(components);
     ui.tooltip = getTooltipText(components);
+    if (init) {
+      vscode.window.showInformationMessage('GitHub Status - Updated!');
+    }
   };
 
   // subscribe to api updates
@@ -33,7 +35,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   context.subscriptions.push(update);
   context.subscriptions.push(ui);
   // initial update
-  updateStatus();
+  updateStatus(true);
 };
 
 export function deactivate() {}

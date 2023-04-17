@@ -8,9 +8,9 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.56.0
   '@typescript-eslint/parser': ^5.56.0
   '@vscode/test-electron': ^2.3.0
+  axios: ^0.24.0
   eslint: ^8.36.0
   glob: ^8.1.0
-  ky: ^0.33.3
   mocha: ^10.2.0
   ts-loader: ^9.4.2
   typescript: ^4.9.5
@@ -18,7 +18,7 @@ specifiers:
   webpack-cli: ^5.0.1
 
 dependencies:
-  ky: 0.33.3
+  axios: 0.24.0
 
 devDependencies:
   '@types/glob': 8.1.0
@@ -587,6 +587,14 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /axios/0.24.0:
+    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
@@ -1018,6 +1026,16 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
+  /follow-redirects/1.15.2:
+    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /fs.realpath/1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
@@ -1306,11 +1324,6 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /ky/0.33.3:
-    resolution: {integrity: sha512-CasD9OCEQSFIam2U8efFK81Yeg8vNMTBUqtMOHlrcWQHqUX3HeCl9Dr31u4toV7emlH8Mymk5+9p0lL6mKb/Xw==}
-    engines: {node: '>=14.16'}
-    dev: false
 
   /levn/0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}

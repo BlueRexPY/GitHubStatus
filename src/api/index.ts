@@ -1,4 +1,4 @@
-import ky from 'ky';
+import axios from 'axios';
 import { IData } from '../types';
 
-export const getStatus = () => ky('https://www.githubstatus.com/api/v2/summary.json').json<IData>();
+export const statusReq = axios.get<IData>('https://www.githubstatus.com/api/v2/summary.json');
