@@ -14,7 +14,7 @@ export const activate = (context: vscode.ExtensionContext) => {
     const components = getComponents(data.data);
     ui.color = getColor(components);
     ui.tooltip = getTooltipText(components);
-    if (init) {
+    if (!init) {
       vscode.window.showInformationMessage('GitHub Status - Updated!');
     }
   };
