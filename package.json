@@ -14,7 +14,7 @@
     "type": "git",
     "url": "https://github.com/BlueRexPY/GitHubStatus.git"
   },
-  "icon": "images/icon.svg",
+  "icon": "images/icon.png",
   "license": "MIT",
   "keywords": [
     "github",
