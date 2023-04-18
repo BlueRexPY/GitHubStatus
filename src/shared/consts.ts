@@ -1,5 +1,3 @@
-import { StatusEnum } from './types';
-
 export const statusColors = {
   operational: 'none',
   maintenance: 'blue',

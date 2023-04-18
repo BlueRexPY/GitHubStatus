@@ -7,7 +7,6 @@ import { getColor, getComponents, getTooltipText } from './service';
 export const activate = (context: vscode.ExtensionContext) => {
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus();
-    vscode.window.showInformationMessage('GitHub Status - Updated!');
   });
 
   const updateStatus = async () => {
@@ -25,7 +24,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   }, interval * 60 * 1000); // convert minutes to milliseconds
 
   // initial config
-  ui.tooltip = 'GitHub Status';
+  ui.tooltip = 'Loading...';
   ui.text = '$(github-inverted)';
   // register up
   ui.command = updateCommand;

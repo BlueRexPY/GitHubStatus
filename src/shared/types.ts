@@ -45,4 +45,4 @@ export interface IStatusClass {
   description: string;
 }
 
-export type ComponentsType = Record<StatusEnum, string>;
+export type ComponentsType = Record<string, StatusEnum>;
