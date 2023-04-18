@@ -48,7 +48,7 @@ export const getTooltipText = (components: ComponentsType) => {
     text.push('Major Outage: ' + getValuesByKey(components, StatusEnum.majorOutage).join(', '));
   }
 
-  return text ? text.join('; ') : 'All systems operational';
+  return text.length ? text.join('; ') : 'All systems operational';
 };
 
 const getValuesByKey = (obj: ComponentsType, key: StatusEnum) =>
