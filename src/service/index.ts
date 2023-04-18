@@ -30,23 +30,25 @@ export const getColor = (components: ComponentsType) => {
 };
 
 export const getTooltipText = (components: ComponentsType) => {
-  let text = '';
+  let text = new Array<string>();
   const statusesList = Object.keys(components);
 
   if (statusesList.includes(StatusEnum.maintenance)) {
-    text += 'Maintenance: ' + getValuesByKey(components, StatusEnum.maintenance).join(', ');
+    text.push('Maintenance: ' + getValuesByKey(components, StatusEnum.maintenance).join(', '));
   }
   if (statusesList.includes(StatusEnum.degradedPerformance)) {
-    text += 'Degraded Performance: ' + getValuesByKey(components, StatusEnum.degradedPerformance).join(', ');
+    text.push(
+      'Degraded Performance: ' + getValuesByKey(components, StatusEnum.degradedPerformance).join(', '),
+    );
   }
   if (statusesList.includes(StatusEnum.partialOutage)) {
-    text += 'Partial Outage: ' + getValuesByKey(components, StatusEnum.partialOutage).join(', ');
+    text.push('Partial Outage: ' + getValuesByKey(components, StatusEnum.partialOutage).join(', '));
   }
   if (statusesList.includes(StatusEnum.majorOutage)) {
-    text += 'Major Outage: ' + getValuesByKey(components, StatusEnum.majorOutage).join(', ');
+    text.push('Major Outage: ' + getValuesByKey(components, StatusEnum.majorOutage).join(', '));
   }
 
-  return text ? text : 'All systems operational';
+  return text ? text.join('; ') : 'All systems operational';
 };
 
 const getValuesByKey = (obj: ComponentsType, key: StatusEnum) =>
