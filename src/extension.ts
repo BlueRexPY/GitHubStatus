@@ -7,16 +7,14 @@ import { getColor, getComponents, getTooltipText } from './service';
 export const activate = (context: vscode.ExtensionContext) => {
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus();
+    vscode.window.showInformationMessage('GitHub Status - Updated!');
   });
 
-  const updateStatus = async (init: boolean = false) => {
+  const updateStatus = async () => {
     const data = await statusReq;
     const components = getComponents(data.data);
     ui.color = getColor(components);
     ui.tooltip = getTooltipText(components);
-    if (!init) {
-      vscode.window.showInformationMessage('GitHub Status - Updated!');
-    }
   };
 
   // subscribe to api updates
@@ -35,7 +33,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   context.subscriptions.push(update);
   context.subscriptions.push(ui);
   // initial update
-  updateStatus(true);
+  updateStatus();
 };
 
 export function deactivate() {}
