@@ -2,7 +2,7 @@
   "name": "github-status",
   "displayName": "GitHub Status",
   "description": "Extension for VS Code provides real-time information about the availability and performance of GitHub services",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "engines": {
     "vscode": "^1.76.0"
   },
