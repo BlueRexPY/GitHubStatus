@@ -24,6 +24,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus();
+    vscode.window.showInformationMessage('GitHub Status updated!');
   });
 
   ui.tooltip = loadingText;
