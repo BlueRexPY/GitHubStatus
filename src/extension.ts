@@ -3,36 +3,42 @@ import { statusReq } from './api';
 import { updateCommand } from './commands/update';
 import ui from './ui';
 import { getColor, getComponents, getTooltipText } from './service';
+import { defaultInterval, extensionLogo, loadingText } from './shared/consts';
 
 export const activate = (context: vscode.ExtensionContext) => {
+  const updateStatus = async () => {
+    try {
+      const { data } = await statusReq;
+      const components = getComponents(data);
+      ui.color = getColor(components);
+      ui.tooltip = getTooltipText(components);
+    } catch (error) {
+      vscode.window.showErrorMessage(`Error updating GitHub Status: ${error}`);
+    }
+  };
+
+  const config = vscode.workspace.getConfiguration('gitHubStatus');
+  const interval = (config.get<number>('interval') || defaultInterval) * 60 * 1000; // Convert to milliseconds
+  const updateInterval = setInterval(updateStatus, interval);
+
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus();
   });
 
-  const updateStatus = async () => {
-    const data = await statusReq;
-    const components = getComponents(data.data);
-    ui.color = getColor(components);
-    ui.tooltip = getTooltipText(components);
-  };
-
-  // subscribe to api updates
-  const config = vscode.workspace.getConfiguration('gitHubStatus');
-  const interval = (config.get('interval') as number) || 5; // default 5 minutes
-  setInterval(() => {
-    updateStatus();
-  }, interval * 60 * 1000); // convert minutes to milliseconds
-
-  // initial config
-  ui.tooltip = 'Loading...';
-  ui.text = '$(github-inverted)';
-  // register up
+  ui.tooltip = loadingText;
+  ui.text = extensionLogo;
   ui.command = updateCommand;
   ui.show();
+
   context.subscriptions.push(update);
   context.subscriptions.push(ui);
-  // initial update
+
   updateStatus();
+
+  // Clear interval on extension deactivation
+  context.subscriptions.push(
+    vscode.Disposable.from(new vscode.Disposable(() => clearInterval(updateInterval))),
+  );
 };
 
 export function deactivate() {}

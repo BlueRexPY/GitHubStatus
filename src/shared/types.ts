@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface IData {
   page: IPage;
   components: IComponent[];
@@ -25,11 +26,11 @@ export interface IComponent {
 export type ID = string;
 
 export enum StatusEnum {
-  operational = 'operational',
-  degradedPerformance = 'degraded_performance',
-  partialOutage = 'partial_outage',
-  majorOutage = 'major_outage',
-  maintenance = 'maintenance',
+  OPERATIONAL = 'operational',
+  DEGRADED_PERFORMANCE = 'degraded_performance',
+  PARTIAL_OUTAGE = 'partial_outage',
+  MAJOR_OUTAGE = 'major_outage',
+  MAINTENANCE = 'maintenance',
 }
 
 export interface IPage {

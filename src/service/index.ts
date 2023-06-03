@@ -1,57 +1,36 @@
-import { statusColors } from '../shared/consts';
+import { statusColors, statusText } from '../shared/consts';
 import { ComponentsType, IData, StatusEnum } from '../shared/types';
 
-export const getComponents = (data: IData) =>
-  data.components.reduce((acc, component) => {
-    acc[component.name] = component.status;
-    return acc;
-  }, {} as ComponentsType);
+export const getComponents = (data: IData): ComponentsType =>
+  data.components.reduce((acc, { name, status }) => ({ ...acc, [name]: status }), {});
 
-export const getColor = (components: ComponentsType) => {
+export const getColor = (components: ComponentsType): string => {
   const statusesList = Object.values(components);
-  let color = 'none';
+  const colorMap: Record<StatusEnum, string> = {
+    [StatusEnum.OPERATIONAL]: statusColors.operational,
+    [StatusEnum.MAINTENANCE]: statusColors.maintenance,
+    [StatusEnum.DEGRADED_PERFORMANCE]: statusColors.degradedPerformance,
+    [StatusEnum.PARTIAL_OUTAGE]: statusColors.partialOutage,
+    [StatusEnum.MAJOR_OUTAGE]: statusColors.majorOutage,
+  };
 
-  if (statusesList.includes(StatusEnum.maintenance)) {
-    color = statusColors.maintenance;
-  }
-  if (statusesList.includes(StatusEnum.degradedPerformance)) {
-    color = statusColors.degradedPerformance;
-  }
-
-  if (statusesList.includes(StatusEnum.partialOutage)) {
-    color = statusColors.partialOutage;
-  }
-
-  if (statusesList.includes(StatusEnum.majorOutage)) {
-    color = statusColors.majorOutage;
-  }
-
-  return color;
+  const color = statusesList.find((status) => status in colorMap);
+  return color ? colorMap[color] : statusColors.operational;
 };
 
-export const getTooltipText = (components: ComponentsType) => {
-  let text = new Array<string>();
-  const statusesList = Object.values(components);
+export const getTooltipText = (components: ComponentsType): string => {
+  const textMap: Record<StatusEnum, string> = {
+    [StatusEnum.OPERATIONAL]: statusText.operational,
+    [StatusEnum.MAINTENANCE]: statusText.maintenance,
+    [StatusEnum.DEGRADED_PERFORMANCE]: statusText.degradedPerformance,
+    [StatusEnum.PARTIAL_OUTAGE]: statusText.partialOutage,
+    [StatusEnum.MAJOR_OUTAGE]: statusText.majorOutage,
+  };
 
-  if (statusesList.includes(StatusEnum.maintenance)) {
-    text.push('Maintenance: ' + getValuesByStatus(components, StatusEnum.maintenance).join(', '));
-  }
-  if (statusesList.includes(StatusEnum.degradedPerformance)) {
-    text.push(
-      'Degraded Performance: ' + getValuesByStatus(components, StatusEnum.degradedPerformance).join(', '),
-    );
-  }
-  if (statusesList.includes(StatusEnum.partialOutage)) {
-    text.push('Partial Outage: ' + getValuesByStatus(components, StatusEnum.partialOutage).join(', '));
-  }
-  if (statusesList.includes(StatusEnum.majorOutage)) {
-    text.push('Major Outage: ' + getValuesByStatus(components, StatusEnum.majorOutage).join(', '));
-  }
+  const text = Object.entries(components)
+    .filter(([, value]) => value in textMap && value !== StatusEnum.OPERATIONAL)
+    .map(([key, value]) => `${textMap[value]}: ${key}`)
+    .join(', ');
 
-  return text.length ? text.join('; ') : 'All systems operational';
+  return text || 'All systems operational';
 };
-
-const getValuesByStatus = (obj: ComponentsType, status: StatusEnum): string[] =>
-  Object.entries(obj)
-    .filter(([_, value]) => value === status)
-    .map(([key]) => key);
