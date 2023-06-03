@@ -13,7 +13,8 @@ export const activate = (context: vscode.ExtensionContext) => {
       ui.color = getColor(components);
       ui.tooltip = getTooltipText(components);
     } catch (error) {
-      vscode.window.showErrorMessage(`Error updating GitHub Status: ${error}`);
+      // ! Uncomment this line to see error messages in the VSCode
+      // vscode.window.showErrorMessage(`Error updating GitHub Status: ${error}`);
     }
   };
 

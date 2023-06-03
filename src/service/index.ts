@@ -1,11 +1,11 @@
+/* eslint-disable curly */
 import { statusColors, statusText } from '../shared/consts';
 import { ComponentsType, IData, StatusEnum } from '../shared/types';
 
-export const getComponents = (data: IData): ComponentsType =>
-  data.components.reduce((acc, { name, status }) => ({ ...acc, [name]: status }), {});
+export const getComponents = ({ components }: IData): ComponentsType =>
+  components.reduce((acc, { name, status }) => ({ ...acc, [name]: status }), {});
 
 export const getColor = (components: ComponentsType): string => {
-  const statusesList = Object.values(components);
   const colorMap: Record<StatusEnum, string> = {
     [StatusEnum.OPERATIONAL]: statusColors.operational,
     [StatusEnum.MAINTENANCE]: statusColors.maintenance,
@@ -14,8 +14,18 @@ export const getColor = (components: ComponentsType): string => {
     [StatusEnum.MAJOR_OUTAGE]: statusColors.majorOutage,
   };
 
-  const color = statusesList.find((status) => status in colorMap);
-  return color ? colorMap[color] : statusColors.operational;
+  const statusPriorityList: StatusEnum[] = [
+    StatusEnum.MAJOR_OUTAGE,
+    StatusEnum.PARTIAL_OUTAGE,
+    StatusEnum.DEGRADED_PERFORMANCE,
+    StatusEnum.MAINTENANCE,
+  ];
+
+  for (const status of statusPriorityList) {
+    if (status in components) return colorMap[status];
+  }
+
+  return colorMap[StatusEnum.OPERATIONAL];
 };
 
 export const getTooltipText = (components: ComponentsType): string => {
@@ -28,9 +38,9 @@ export const getTooltipText = (components: ComponentsType): string => {
   };
 
   const text = Object.entries(components)
-    .filter(([, value]) => value in textMap && value !== StatusEnum.OPERATIONAL)
+    .filter(([, value]) => value !== StatusEnum.OPERATIONAL && value in textMap)
     .map(([key, value]) => `${textMap[value]}: ${key}`)
     .join(', ');
 
-  return text || 'All systems operational';
+  return text || statusText.operational;
 };
