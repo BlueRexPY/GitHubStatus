@@ -3,7 +3,8 @@ import { statusReq } from './api';
 import { updateCommand } from './commands/update';
 import ui from './ui';
 import { getColor, getComponents, getTooltipText } from './service';
-import { defaultInterval, extensionLogo, loadingText } from './shared/consts';
+import { defaultInterval, errorText, extensionLogo, loadingText } from './shared/consts';
+import { IData } from './shared/types';
 
 export const activate = (context: vscode.ExtensionContext) => {
   const updateStatus = async () => {
@@ -13,6 +14,7 @@ export const activate = (context: vscode.ExtensionContext) => {
       ui.color = getColor(components);
       ui.tooltip = getTooltipText(components);
     } catch (error) {
+      ui.tooltip = errorText;
       // ! Uncomment this line to see error messages in the VSCode
       // vscode.window.showErrorMessage(`Error updating GitHub Status: ${error}`);
     }
@@ -24,7 +26,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus();
-    vscode.window.showInformationMessage('GitHub Status updated!');
+    vscode.window.showInformationMessage('✅ GitHub Status updated!');
   });
 
   ui.tooltip = loadingText;

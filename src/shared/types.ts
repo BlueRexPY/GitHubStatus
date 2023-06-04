@@ -26,12 +26,14 @@ export interface IComponent {
 export type ID = string;
 
 export enum StatusEnum {
-  OPERATIONAL = 'operational',
-  DEGRADED_PERFORMANCE = 'degraded_performance',
-  PARTIAL_OUTAGE = 'partial_outage',
-  MAJOR_OUTAGE = 'major_outage',
-  MAINTENANCE = 'maintenance',
+  majorOutage = 'major_outage',
+  partialOutage = 'partial_outage',
+  degradedPerformance = 'degraded_performance',
+  maintenance = 'maintenance',
+  operational = 'operational',
 }
+
+export type ExcludedOperationalType = Exclude<StatusEnum, 'operational'>;
 
 export interface IPage {
   id: ID;
