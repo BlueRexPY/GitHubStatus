@@ -2,7 +2,7 @@
   "name": "github-status",
   "displayName": "GitHub Status",
   "description": "Extension for VS Code provides real-time information about the availability and performance of GitHub services",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -74,9 +74,9 @@
     "lint": "eslint src --ext ts",
     "package": "pnpm vsce package --no-dependencies",
     "publish": "pnpm vsce publish --no-dependencies",
-    "minor": "pnpm vsce publish minor --no-dependencies",
-    "major": "pnpm vsce publish major --no-dependencies",
-    "patch": "pnpm vsce publish patch --no-dependencies"
+    "minor": "npx vsce publish minor --no-dependencies",
+    "major": "npx vsce publish major --no-dependencies",
+    "patch": "npx vsce publish patch --no-dependencies"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
