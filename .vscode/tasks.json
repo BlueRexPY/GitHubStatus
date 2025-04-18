@@ -6,7 +6,26 @@
 		{
 			"type": "npm",
 			"script": "watch",
-			"problemMatcher": "$ts-webpack-watch",
+			"problemMatcher": {
+				"owner": "typescript",
+				"applyTo": "closedDocuments",
+				"fileLocation": [
+					"relative",
+					"${workspaceFolder}"
+				],
+				"pattern": {
+					"regexp": "^([^\\s].*)\\((\\d+,\\d+)\\): \\s*(warning|error)\\s*:\\s*(.*)$",
+					"file": 1,
+					"location": 2,
+					"severity": 3,
+					"message": 4
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "Compiling...",
+					"endsPattern": "webpack compiled"
+				}
+			},
 			"isBackground": true,
 			"presentation": {
 				"reveal": "never",

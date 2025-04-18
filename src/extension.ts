@@ -1,31 +1,71 @@
 import * as vscode from 'vscode';
-import { statusReq } from './api';
 import { updateCommand } from './commands/update';
 import ui from './ui';
-import { getColor, getComponents, getTooltipText } from './service';
+import { getColor, getComponents, getTooltipText, fetchGitHubStatusWithRetry } from './service';
 import { defaultInterval, errorText, extensionLogo, loadingText } from './shared/consts';
 
 export const activate = (context: vscode.ExtensionContext) => {
-  const updateStatus = async () => {
+  let updateInterval: NodeJS.Timeout;
+
+  const updateStatus = async (showErrors = false) => {
     try {
-      const { data } = await statusReq;
+      ui.text = `${extensionLogo} $(sync~spin)`;
+
+      const data = await fetchGitHubStatusWithRetry();
+
+      if (!data) {
+        ui.tooltip = errorText;
+        ui.text = `${extensionLogo} $(warning)`;
+
+        if (showErrors) {
+          vscode.window.showErrorMessage(
+            `Error updating GitHub Status: Could not connect to GitHub Status API.`,
+          );
+        }
+
+        return;
+      }
+
       const components = getComponents(data);
       ui.color = getColor(components);
       ui.tooltip = getTooltipText(components);
+      ui.text = extensionLogo;
     } catch (error) {
       ui.tooltip = errorText;
-      // ! Uncomment this line to see error messages in the VSCode
-      // vscode.window.showErrorMessage(`Error updating GitHub Status: ${error}`);
+      ui.text = `${extensionLogo} $(warning)`;
+
+      if (showErrors) {
+        vscode.window.showErrorMessage(
+          `Error updating GitHub Status: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        );
+      }
     }
   };
 
-  const config = vscode.workspace.getConfiguration('githubStatus');
-  const interval = (config.get<number>('refreshInterval') || defaultInterval) * 60 * 1000; // Convert to milliseconds
-  const updateInterval = setInterval(updateStatus, interval);
+  const setupRefreshInterval = () => {
+    if (updateInterval) {
+      clearInterval(updateInterval);
+    }
+
+    const config = vscode.workspace.getConfiguration('githubStatus');
+    const interval = (config.get<number>('refreshInterval') || defaultInterval) * 60 * 1000;
+    updateInterval = setInterval(() => updateStatus(false), interval);
+  };
+
+  setupRefreshInterval();
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (event.affectsConfiguration('githubStatus.refreshInterval')) {
+        setupRefreshInterval();
+        vscode.window.showInformationMessage('GitHub Status refresh interval updated!');
+      }
+    }),
+  );
 
   let update = vscode.commands.registerCommand(updateCommand, () => {
-    updateStatus();
-    vscode.window.showInformationMessage('GitHub Status updated!');
+    updateStatus(true);
+    vscode.window.showInformationMessage('GitHub Status update requested!');
   });
 
   ui.tooltip = loadingText;
@@ -36,9 +76,8 @@ export const activate = (context: vscode.ExtensionContext) => {
   context.subscriptions.push(update);
   context.subscriptions.push(ui);
 
-  updateStatus();
+  updateStatus(false);
 
-  // Clear interval on extension deactivation
   context.subscriptions.push(
     vscode.Disposable.from(new vscode.Disposable(() => clearInterval(updateInterval))),
   );
