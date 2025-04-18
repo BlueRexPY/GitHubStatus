@@ -4,7 +4,6 @@ import { updateCommand } from './commands/update';
 import ui from './ui';
 import { getColor, getComponents, getTooltipText } from './service';
 import { defaultInterval, errorText, extensionLogo, loadingText } from './shared/consts';
-import { IData } from './shared/types';
 
 export const activate = (context: vscode.ExtensionContext) => {
   const updateStatus = async () => {
@@ -20,13 +19,13 @@ export const activate = (context: vscode.ExtensionContext) => {
     }
   };
 
-  const config = vscode.workspace.getConfiguration('gitHubStatus');
-  const interval = (config.get<number>('interval') || defaultInterval) * 60 * 1000; // Convert to milliseconds
+  const config = vscode.workspace.getConfiguration('githubStatus');
+  const interval = (config.get<number>('refreshInterval') || defaultInterval) * 60 * 1000; // Convert to milliseconds
   const updateInterval = setInterval(updateStatus, interval);
 
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus();
-    vscode.window.showInformationMessage('✅ GitHub Status updated!');
+    vscode.window.showInformationMessage('GitHub Status updated!');
   });
 
   ui.tooltip = loadingText;

@@ -72,7 +72,7 @@
     "publish": "pnpm vsce publish --no-dependencies",
     "minor": "pnpm vsce publish minor --no-dependencies",
     "major": "pnpm vsce publish major --no-dependencies",
-    "patch": "pnpm vsce publish patch --no-dependencies"
+    "patch": "pnpm vsce publish patch --no-dependencies",
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
