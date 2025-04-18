@@ -32,6 +32,10 @@
       {
         "command": "gitHubStatus.update",
         "title": "GitHub Status: Hard refresh 🔄"
+      },
+      {
+        "command": "gitHubStatus.showPanel",
+        "title": "GitHub Status: Show Status Dashboard 📊"
       }
     ],
     "views": {
@@ -91,6 +95,7 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
+    "@vscode-elements/elements": "^1.15.0",
     "axios": "^0.24.0"
   }
 }

@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
 import { updateCommand } from './commands/update';
+import { showPanelCommand, registerShowStatusPanelCommand } from './commands/showStatusPanel';
 import ui from './ui';
 import { getColor, getComponents, getTooltipText, fetchGitHubStatusWithRetry } from './service';
 import { defaultInterval, errorText, extensionLogo, loadingText } from './shared/consts';
+import { GitHubStatusPanel } from './webview/statusPanel';
 
 export const activate = (context: vscode.ExtensionContext) => {
   let updateInterval: NodeJS.Timeout;
@@ -30,6 +32,11 @@ export const activate = (context: vscode.ExtensionContext) => {
       ui.color = getColor(components);
       ui.tooltip = getTooltipText(components);
       ui.text = extensionLogo;
+
+      // Update the WebView panel if it exists
+      if (GitHubStatusPanel.currentPanel) {
+        GitHubStatusPanel.currentPanel.updateContent(data);
+      }
     } catch (error) {
       ui.tooltip = errorText;
       ui.text = `${extensionLogo} $(warning)`;
@@ -63,17 +70,23 @@ export const activate = (context: vscode.ExtensionContext) => {
     }),
   );
 
+  // Register commands
   let update = vscode.commands.registerCommand(updateCommand, () => {
     updateStatus(true);
     vscode.window.showInformationMessage('GitHub Status update requested!');
   });
 
+  // Register the show panel command
+  const showPanel = registerShowStatusPanelCommand(context);
+
+  // Set up status bar item
   ui.tooltip = loadingText;
   ui.text = extensionLogo;
-  ui.command = updateCommand;
+  ui.command = showPanelCommand; // Change the command to open the panel instead of just updating
   ui.show();
 
   context.subscriptions.push(update);
+  context.subscriptions.push(showPanel);
   context.subscriptions.push(ui);
 
   updateStatus(false);
@@ -83,4 +96,8 @@ export const activate = (context: vscode.ExtensionContext) => {
   );
 };
 
-export function deactivate() {}
+export function deactivate() {
+  if (GitHubStatusPanel.currentPanel) {
+    GitHubStatusPanel.currentPanel.dispose();
+  }
+}
